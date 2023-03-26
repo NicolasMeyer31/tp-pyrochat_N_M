@@ -12,17 +12,10 @@ from cryptography.hazmat.primitives import padding, hashes, hmac
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 
-# default values used to populate connection window
-DEFAULT_VALUES = {
-    "host" : "127.0.0.1",
-    "port" : "6666",
-    "name" : "foo"
-} 
-
 class CipheredGUI(BasicGUI):
-    """
-    GUI pour un chat client sécurisé.
-    """
+
+    #GUI pour un chat client sécurisé.
+
 
     def __init__(self, key=None):
         super().__init__()
@@ -157,12 +150,8 @@ class CipheredGUI(BasicGUI):
         # function called to get incoming messages and display them
         if self._callback is not None:
             for user, message in self._callback.get():
-                try:
-                    #dechiffre le message
-                    message = self.decrypt(message)
-                    self.update_text_screen(f"{user} : {message}")
-                except:
-                    self._log.error(f"bug")
+                message = self.decrypt(message)
+                self.update_text_screen(f"{user} : {message}")
             self._callback.clear()
 
     def send(self, text)->None:
@@ -183,6 +172,6 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
     # instanciate the class, create context and related stuff, run the main loop
-    client = BasicGUI()
+    client = CipheredGUI()
     client.create()
     client.loop()
