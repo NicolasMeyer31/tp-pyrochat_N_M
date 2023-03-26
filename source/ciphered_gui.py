@@ -1,5 +1,6 @@
 import logging
 import os
+import base64
 import dearpygui.dearpygui as dpg
 
 from chat_client import ChatClient
@@ -110,7 +111,7 @@ class CipheredGUI(BasicGUI):
         self.key = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=16,
-            salt="Sauciss0n".encode(),
+            salt="Saucisson".encode(),
             iterations=100000,
             backend=default_backend()
         )
@@ -118,15 +119,34 @@ class CipheredGUI(BasicGUI):
     def encrypt(self, message):
         #chiffrement du message envoyé
         iv=os.urandom(16)
+
         encryptor = Cipher(
             algorithms.AES(self.key), 
             modes.CTR(iv),
             backend=default_backend()
-        ).encryptor
+        ).encryptor()
 
+        padder = padding.PKCS7(128).padder()
+        padder_data = padder.update(message.encode())+padder.finalize()
         #retourne un typle de bytes (iv, encrypted)
-        return(iv, encryptor.finalize())
+        return(iv, encryptor.update(padder_data) + encryptor.finalize())
     
+    def decrypt(self, message):
+        #dechiffrage du message envoyé
+        iv = base64.b64decode(message[0]['data'])
+        message=base64.b64decode(message[1]['data'])
+
+        decryptor = Cipher(
+            algorithms.AES(self.key), 
+            modes.CTR(iv),
+            backend=default_backend()
+        ).encryptor()
+
+        unpadder = padding.PKCS7(128).unpadder()
+        data = decryptor.update(message) + decryptor.finalize()
+        #retourne le message en clair
+        return(unpadder.update(data) + unpadder.finalize()).decode()
+
     def on_close(self):
         # called when the chat windows is closed
         self._client.stop()
