@@ -157,12 +157,19 @@ class CipheredGUI(BasicGUI):
         # function called to get incoming messages and display them
         if self._callback is not None:
             for user, message in self._callback.get():
-                self.update_text_screen(f"{user} : {message}")
+                try:
+                    #dechiffre le message
+                    message = self.decrypt(message)
+                    self.update_text_screen(f"{user} : {message}")
+                except:
+                    self._log.error(f"bug")
             self._callback.clear()
 
     def send(self, text)->None:
+        #chiffre le message reçu
+        message = self.encrypt(text)
         # function called to send a message to all (broadcasting)
-        self._client.send_message(text)
+        self._client.send_message(message)
 
     def loop(self):
         # main loop
