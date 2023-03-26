@@ -36,13 +36,8 @@ class FernetGUI(CipheredGUI):
         dpg.set_value("screen", "Connecting")
 
         #dérivation de la clé
-        self.key = PBKDF2HMAC(
-            algorithm=hashes.SHA256(),
-            length=16,
-            salt="Saucisson".encode(),
-            iterations=100000,
-            backend=default_backend()
-        )
+        self.key = hashlib.sha256(password.endoce()).digest()
+        self.key = base64.b64encode(self.key)
 
     def encrypt(self, message):
         #chiffrement du message envoyé
@@ -51,19 +46,10 @@ class FernetGUI(CipheredGUI):
     
     def decrypt(self, message):
         #dechiffrage du message envoyé
-        iv = base64.b64decode(message[0]['data'])
-        message=base64.b64decode(message[1]['data'])
-
-        decryptor = Cipher(
-            algorithms.AES(self.key), 
-            modes.CTR(iv),
-            backend=default_backend()
-        ).encryptor()
-
-        unpadder = padding.PKCS7(128).unpadder()
-        data = decryptor.update(message) + decryptor.finalize()
+        message=base64.b64decode(message['data'])
+        f = Fernet(self.key)
         #retourne le message en clair
-        return(unpadder.update(data) + unpadder.finalize()).decode()
+        return f.decrypt(message).decode()
 
  
 
