@@ -46,18 +46,8 @@ class FernetGUI(CipheredGUI):
 
     def encrypt(self, message):
         #chiffrement du message envoyé
-        iv=os.urandom(16)
-
-        encryptor = Cipher(
-            algorithms.AES(self.key), 
-            modes.CTR(iv),
-            backend=default_backend()
-        ).encryptor()
-
-        padder = padding.PKCS7(128).padder()
-        padder_data = padder.update(message.encode())+padder.finalize()
-        #retourne un typle de bytes (iv, encrypted)
-        return(iv, encryptor.update(padder_data) + encryptor.finalize())
+        f = Fernet(self.key)
+        return f.encrypt(bytes(message,'utf-8'))
     
     def decrypt(self, message):
         #dechiffrage du message envoyé
