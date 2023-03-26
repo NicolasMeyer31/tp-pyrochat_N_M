@@ -19,3 +19,23 @@ Ce problème viole le principe de Kerckhoffs.
 ### Question 4
 
 La solution la plus évidente est de mettre en place un système de chiffrement.
+
+## II. Chiffrement
+
+### Question 1
+
+urandom n'est pas considéré comme un choix sûr pour la cryptographie. Cette fonction fournit des nombres aléatoires en utilisant des sources fournies par le système d'exploitation. Cependant, sa qualité et sa prévisibilité dépendent fortement de l'environnement du système.
+
+### Question 2
+
+Utiliser des primitives cryptographiques de manière incorrecte peut être dangereux car cela peut affaiblir ou complètement annuler les garanties de sécurité offertes par ces primitives.
+
+### Question 3
+
+Le serveur malveillant peut collecter des informations sur l'utilisateur, telles que son adresse IP ou les données qu'il envoie, et les utiliser pour lancer des attaques ultérieures.
+
+### Question 4
+
+Il manque la vérification de l'intégrité des données ciruculant sur le serveur.
+
+
