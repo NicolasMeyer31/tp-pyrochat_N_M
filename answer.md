@@ -39,3 +39,16 @@ Le serveur malveillant peut collecter des informations sur l'utilisateur, telles
 Il manque la vérification de l'intégrité des données ciruculant sur le serveur.
 
 
+# III. Authenticated Symetric Encryption
+
+### Question 1
+
+Fernet est moins risqué que le chiffrement en termes d'implémentation car il gère  automatiquement la génération des clés, l'initialisation du vecteur d'initialisation et la gestion des erreurs.
+
+### Question 2
+
+Il s'agit d'une attaque de rejeu. L'attaquant enregistre des messages chiffrés précédemment échangés entre deux utilisateurs et les renvoie à l'un des deux. Si les messages renvoyés sont acceptés, l'attaquant peut accéder aux données échangées.
+
+### Question 3
+
+Pour se protéger contre les attaques de rejeu, on utilise un nonce, il s'agit d'un nombre aléatoire généré par l'émetteur. Le récepteur vérifie que le nonce est unique pour chaque message reçu, ce qui empêche l'attaquant de renvoyer des messages précédemment échangés.
